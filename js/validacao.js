@@ -10,8 +10,6 @@ window.addEventListener('load', () => {
     birthdate.setAttribute('placeholder', 'Data de Nascimento');
     form.insertBefore(birthdate, inputPassword)
 
-    let listaUl = document.createElement('ul');
-    form.insertBefore(listaUl, btnCadastrase)
 
     btnCadastrase.onclick = (evento) => {
         evento.preventDefault()
@@ -23,45 +21,66 @@ window.addEventListener('load', () => {
         let inputPassword = document.getElementsByName('password')[0];
         let inputBirthDate = document.getElementsByName('birth')[0];
 
-        let htmlErros = document.querySelector('ul.erros');
 
-        htmlErros.innerHTML = "";
-        let listaErros = [];
+        let temErro = false;
 
 
-        if (!inputEmail.value.includes('@')) {
-            listaErros.push('Preencha o campo email corretamente.');
+        anoNascimento = parseInt(inputBirthDate.value.split('-')[0])
+        let anoAtual = new Date().getFullYear();
+        let idadeTotal = anoAtual - anoNascimento
+
+
+        if (!inputEmail.value.includes('@') || !inputEmail.value.includes('.')) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Email deve conter os caracteres "@" e "."';
+            form.insertBefore(listaUl, inputName)
+            temErro = true;
         }
 
-        if (inputName.value.length < 3) {
-            listaErros.push('O campo Nome deve ter no mínimo 3 caracteres.');
+        if (inputEmail.value.length < 10 || inputEmail.value.length > 180) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Email deve conter de 10 a 180 caracteres.';
+            form.insertBefore(listaUl, inputName)
+            temErro = true;
         }
 
-        if (inputSurname.value.length < 3) {
-            listaErros.push('O campo Último Sobrenome deve ter no mínimo 3 caracteres.');
+        if (inputName.value.length < 2 || inputName.value.length > 80) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Nome deve conter de 2 a 80 caracteres.';
+            form.insertBefore(listaUl, inputSurname)
+            temErro = true;
         }
 
-        if (inputUsername.value.length < 3) {
-            listaErros.push('O campo Nome de Usuário deve ter no mínimo 3 caracteres.');
+        if (inputSurname.value.length < 2 || inputSurname.value.length > 100) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Sobrenome deve conter de 2 a 100 caracteres.';
+            form.insertBefore(listaUl, inputUsername)
+            temErro = true;
         }
 
-        if (inputPassword.value.length < 8) {
-            listaErros.push('O campo Senha deve conter no mínimo 8 caracteres.');
+        if (inputUsername.value.length < 10 || inputUsername.value.length > 15) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Nome de Usuário deve conter de 10 a 15 caracteres.';
+            form.insertBefore(listaUl, inputBirthDate)
+            temErro = true;
         }
 
-        if (inputBirthDate.value.length == '') {
-            listaErros.push('Preencha o campo Data de Nascimento corretamente.');
+        if (inputPassword.value.length < 8 || inputPassword.value.length > 100) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'O campo Senha deve conter de 8 a 100 caracteres.';
+            form.insertBefore(listaUl, inputBirthDate)
+            temErro = true;
         }
 
-        if (listaErros.length > 0) {
-            listaErros.forEach((mensagemErro) => {
-                htmlErros.innerHTML += '<li style="color: red; text-align: left;">' + mensagemErro + '</li>'
-            })
+        if (inputBirthDate.value.length == "" || (idadeTotal < 16 || idadeTotal > 120)) {
+            let listaUl = document.createElement('ul');
+            listaUl.innerHTML = 'Preencha o campo Data de Nascimento corretamente.';
+            form.insertBefore(listaUl, btnCadastrase)
+            temErro = true;
+        }
 
-        } else {
+        if (!temErro) {
             form.submit();
         }
-
-
     }
 })
